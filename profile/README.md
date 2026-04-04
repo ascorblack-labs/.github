@@ -9,47 +9,82 @@ AI-инфраструктура для продакшн-систем на баз
 
 ### Protocore
 
-Protocol-first платформа для оркестрации LLM-агентов. Предсказуемый runtime, event-driven наблюдаемость, безопасное исполнение инструментов.
+Protocol-first платформа для оркестрации LLM-агентов. 57 модулей ядра, 30+ типизированных протоколов, 85+ типов событий, 19 точек расширения через хуки. Работает с любой OpenAI-совместимой моделью — от GPT/Claude до локальных Qwen/Llama через vLLM/Ollama.
+
+Сайт: https://protocore.ascorblack.ru
 
 | Компонент | Описание |
 |-----------|----------|
-| **protocore** | Иммутабельный цикл оркестрации, контракты через `typing.Protocol`, система хуков, сжатие контекста, субагенты, workflow DAG, skills, structured output. 2000+ тестов, 97%+ покрытие |
-| **protocore-enterprise** | Продакшн-дистрибуция: адаптеры (PostgreSQL, Redis, MongoDB), FastAPI-сервис, RBAC, control plane, persona management, метрики, CLI, Docker Compose деплой |
-| **protocore-dashboard** | Админ-панель для управления агентами, маршрутизацией, сессиями, трейсами, RBAC, навыками и шаблонами (Next.js 15 / React 19) |
-| **protocore-chat** | Пользовательское чат-приложение с invite-only авторизацией, SSE-стримингом, human-in-the-loop и визуализацией tool calls (Next.js 15 / React 19) |
+| **protocore** | Иммутабельный цикл оркестрации, 30+ протоколов (`typing.Protocol`), 19 хуков (pluggy), 3-уровневое сжатие контекста, 6 режимов субагентов, workflow DAG, skills, structured output, risk scoring, failure classification, result salvage, scratchpad, plan verification, runtime invariants. 4 863 теста, 96% покрытие |
+| **protocore-enterprise** | Продакшн-дистрибуция: адаптеры (PostgreSQL, Redis, OpenSearch, RabbitMQ), FastAPI-сервис, RBAC (8 ролей), control plane, Access Plan (квоты, breach-политики, сервисные классы), автономный воркер (CRON/INTERVAL/IMMEDIATE, leader election), persona management, 10 аналитических API, метрики, sandbox-сайдкар, CLI, Docker Compose деплой. 2 665 тестов, 84% покрытие |
+| **protocore-dashboard** | Админ-панель: агенты, маршрутизация, сессии, трейсы, RBAC, навыки, шаблоны, Access Plans, автономные задачи, workspace-политики, аналитика (Next.js 15 / React 19) |
+| **protocore-chat** | Чат-приложение с invite-only авторизацией, SSE-стримингом, approval workflow, визуализацией tool calls и артефактов, лендинг-страницей (Next.js 15 / React 19) |
 | **protocore-live-eval** | Фреймворк для live-оценки агентов: сценарии, скоринг, параллельный запуск, CLI |
 
 #### Архитектура
 
 ```
 protocore (core)             — чистое ядро, без зависимостей от бэкендов
+  ├── protocore_tools        — composable tool handlers (web_fetch, web_search)
   └── protocore-enterprise   — адаптеры, сервисный слой, деплой
         ├── protocore-dashboard  — админ-UI
-        ├── protocore-chat       — пользовательский чат
+        ├── protocore-chat       — пользовательский чат + лендинг
         └── protocore-live-eval  — оценка качества агентов
 ```
 
+Зависимости строго сверху вниз: `protocore` → `protocore_adapters` → `protocore_service` → `protocore_distributions`. Фронтенды общаются только через HTTP/SSE.
+
 #### Стек
 
-Python 3.12+ / FastAPI / Pydantic v2 / asyncio / PostgreSQL / Redis / MongoDB / Docker / Next.js 15 / React 19 / TypeScript
+Python 3.12+ / FastAPI / Pydantic v2 / asyncio / PostgreSQL / Redis / OpenSearch / RabbitMQ / Docker / Next.js 15 / React 19 / TypeScript
 
-#### Ключевые возможности
+#### Ключевые возможности ядра
 
-- Иммутабельный цикл оркестрации с бюджетными лимитами (итерации, tool calls, токены)
-- Протокол-ориентированная архитектура — LLM, tools, state, transport, telemetry через адаптеры
-- Субагентная оркестрация: LEADER, AUTO_SELECT, PARALLEL, BYPASS, TOOL_ORCHESTRATED
-- Workflow DAG — граф-ориентированное исполнение сценариев
-- 3-уровневое сжатие контекста (micro / auto / manual) с LLM-суммаризацией
-- Skills — динамическая загрузка и каталог навыков
-- Thinking controls — профили рассуждений с бюджетами токенов
-- Shell safety и worktree isolation — безопасное исполнение команд
-- SSE-стриминг с approval workflow (human-in-the-loop)
-- RBAC с гранулярными скоупами и управление персонами
-- Оптимизирован для локальных моделей (vLLM + Qwen 3/3.5)
+- **Иммутабельный цикл оркестрации** с тремя бюджетами (итерации, tool calls, токены) и graceful degradation
+- **Протокол-ориентированная архитектура** — 30+ typed протоколов для LLM, tools, state, transport, telemetry
+- **6 режимов субагентов**: LEADER, AUTO_SELECT, PARALLEL, TOOL_ORCHESTRATED, CLI_NATIVE, BYPASS
+- **3-уровневое сжатие контекста** (micro/auto/manual) с identity reinjection и аварийной компрессией
+- **Прогрессивная загрузка инструментов** (BM25-retrieval) — экономия до 40% токенов
+- **KV-кэш оптимизация** — снижение стоимости повторных запросов до 10x
+- **Hallucination Override** — проверка ответов модели на соответствие фактическим результатам
+- **Классификация ошибок** (7 категорий) с per-category стратегиями + ResultSalvage
+- **Circuit breaker** с LLM-диагностикой для субагентов
+- **CollapseDetector** (Jaccard similarity) + **DriftDetector** (семантический уход от задачи)
+- **Risk scoring**, task constraints, tool preconditions, runtime invariants
+- **Scratchpad** — append-only общая память с LLM-консолидацией
+- **Worktree isolation** для параллельных агентов + ConflictDetector
+- **Shell safety** (~25 deny-паттернов) + **WorkspaceApprovalPolicy** per operation class
+- **19 хуков** через pluggy, **85+ типов событий**, **100+ Pydantic-моделей**
+
+#### Ключевые возможности enterprise
+
+- **LLM-маршрутизация**: RoutedLLMClient, circuit breaker, health monitoring, квоты, fallback targets
+- **Enterprise RBAC**: 8 ролей (viewer → control_plane_admin), scoped bindings
+- **Access Plan**: коммерческие тарифы с квотами, breach-политиками, сервисными классами
+- **Очередь задач**: RabbitMQ с приоритизацией, dead-letter, consumer pools
+- **Автономный воркер**: Postgres leader election, CRON/INTERVAL/IMMEDIATE триггеры, архивация
+- **10 аналитических API**: usage, cost, latency, errors, activity
+- **SSE-стриминг**: bootstrap/replay, reconnection, rate limiting, 12+ envelope types
+- **Sandbox-сайдкар**: изолированное выполнение кода с Chromium
+- **Persona profiles**: секционированные профили с template-переменными
+- **Per-run метрики**: input/output/cached/reasoning tokens, cost estimate, Prometheus-экспорт
+
+#### Качество кода
+
+| Метрика | Core | Enterprise |
+|---------|------|------------|
+| Тесты | 4 863 | 2 665 |
+| Покрытие | 96% | 84% |
+| Порог | ≥96% | ≥80% |
+| Линтер | ruff | ruff |
+| Типы | mypy strict | mypy strict |
+| Безопасность | bandit, pip-audit | bandit, pip-audit |
+
+**Итого: 7 500+ тестов** across core + enterprise.
 
 #### Текущий статус
 
-Активная разработка. Ядро стабильно (2000+ тестов, 97%+ покрытие), enterprise-слой — 80%+ покрытие. Полный стек развернут: backend, админ-панель, чат-клиент, eval-фреймворк.
+Активная разработка. Полный стек развернут: backend, админ-панель, чат-клиент, eval-фреймворк, sandbox, автономный воркер. По результатам независимых аудитов Protocore архитектурно превосходит OpenAI Agents SDK, Claude Code CLI, Swarms и Litmus по надёжности, экономичности и контролю.
 
 ---
 
