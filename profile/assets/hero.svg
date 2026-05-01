@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" role="img" aria-label="Protocore — Protocol-first AI agent orchestration">
+  <defs>
+    <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="55%" stop-color="#14b8a6"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#10b981" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ambient glow -->
+  <circle cx="1080" cy="180" r="280" fill="url(#glow)"/>
+  <circle cx="220"  cy="60"  r="220" fill="url(#glow)" opacity="0.6"/>
+
+  <!-- Logo block -->
+  <g transform="translate(72,108)">
+    <rect x="0" y="0" width="144" height="144" rx="28" fill="url(#brand)"/>
+    <text x="72" y="108" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="100" font-weight="800" fill="#ffffff" text-anchor="middle">P</text>
+  </g>
+
+  <!-- Brand wordmark -->
+  <text x="248" y="178" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="84" font-weight="800" fill="url(#brand)" letter-spacing="-2">Protocore</text>
+
+  <!-- Tagline -->
+  <text x="252" y="218" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="20" font-weight="500" fill="#94a3b8">Protocol-first AI agent orchestration  ·  by Ascorblack Labs</text>
+
+  <!-- Stat pills -->
+  <g transform="translate(252, 252)" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13" font-weight="600">
+    <g>
+      <rect width="150" height="36" rx="18" fill="none" stroke="#10b981" stroke-width="1.5"/>
+      <text x="75" y="23" fill="#10b981" text-anchor="middle">7 500+ TESTS</text>
+    </g>
+    <g transform="translate(162,0)">
+      <rect width="180" height="36" rx="18" fill="none" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.55"/>
+      <text x="90" y="23" fill="#10b981" fill-opacity="0.85" text-anchor="middle">96% CORE COVERAGE</text>
+    </g>
+    <g transform="translate(354,0)">
+      <rect width="160" height="36" rx="18" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-opacity="0.55"/>
+      <text x="80" y="23" fill="#94a3b8" text-anchor="middle">57 CORE MODULES</text>
+    </g>
+    <g transform="translate(526,0)">
+      <rect width="170" height="36" rx="18" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-opacity="0.55"/>
+      <text x="85" y="23" fill="#94a3b8" text-anchor="middle">100% SELF-HOSTED</text>
+    </g>
+  </g>
+
+  <!-- Right-side agent graph hint -->
+  <g transform="translate(870, 30)" stroke="url(#ring)" fill="none" stroke-width="1.4">
+    <!-- connections (drawn first so nodes overlay) -->
+    <line x1="60"  y1="60"  x2="170" y2="30"/>
+    <line x1="60"  y1="60"  x2="170" y2="120"/>
+    <line x1="170" y1="30"  x2="280" y2="60"/>
+    <line x1="170" y1="120" x2="280" y2="60"/>
+    <line x1="170" y1="120" x2="280" y2="180"/>
+    <line x1="280" y1="60"  x2="370" y2="120"/>
+    <line x1="280" y1="180" x2="370" y2="120"/>
+    <line x1="170" y1="30"  x2="280" y2="180"/>
+  </g>
+  <g transform="translate(870, 30)">
+    <!-- Leader node -->
+    <circle cx="60"  cy="60"  r="14" fill="#10b981"/>
+    <circle cx="60"  cy="60"  r="22" fill="none" stroke="#10b981" stroke-opacity="0.35" stroke-width="1.5"/>
+    <text x="60" y="98" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="11" font-weight="700" fill="#10b981" text-anchor="middle">LEADER</text>
+
+    <!-- Subagent nodes -->
+    <circle cx="170" cy="30"  r="10" fill="none" stroke="#06b6d4" stroke-width="2"/>
+    <circle cx="170" cy="120" r="10" fill="none" stroke="#06b6d4" stroke-width="2"/>
+    <circle cx="280" cy="60"  r="10" fill="none" stroke="#06b6d4" stroke-width="2"/>
+    <circle cx="280" cy="180" r="10" fill="none" stroke="#06b6d4" stroke-width="2"/>
+    <circle cx="370" cy="120" r="10" fill="none" stroke="#06b6d4" stroke-width="2"/>
+
+    <!-- Tools -->
+    <rect x="160" y="220" width="20" height="20" rx="3" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <rect x="220" y="220" width="20" height="20" rx="3" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <rect x="280" y="220" width="20" height="20" rx="3" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <rect x="340" y="220" width="20" height="20" rx="3" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+    <line x1="280" y1="180" x2="170" y2="220" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1"/>
+    <line x1="280" y1="180" x2="230" y2="220" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1"/>
+    <line x1="280" y1="180" x2="290" y2="220" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1"/>
+    <line x1="280" y1="180" x2="350" y2="220" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1"/>
+
+    <text x="200" y="260" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" fill="#94a3b8" text-anchor="middle">TOOLS</text>
+    <text x="280" y="260" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" fill="#94a3b8" text-anchor="middle">SKILLS</text>
+  </g>
+
+  <!-- thin divider line -->
+  <line x1="72" y1="320" x2="1208" y2="320" stroke="#94a3b8" stroke-opacity="0.18" stroke-width="1"/>
+  <text x="72" y="345" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#94a3b8" fill-opacity="0.7">github.com/ascorblack-labs · protocore.ascorblack.ru</text>
+</svg>
