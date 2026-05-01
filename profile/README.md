@@ -114,77 +114,9 @@ flowchart TB
 
 ## Что отличает Protocore
 
-<table>
-<tr>
-<td width="33%" valign="top">
-
-#### Tool-result consistency check
-
-Модель заявляет «файл создан», а все операции были отклонены политикой? Система обнаружит расхождение и **переопределит ложный ответ** реальным результатом — снижая риск галлюцинаций за счёт сверки заявленных моделью результатов с фактическими ответами инструментов, а не доверяя тексту LLM.
-
-</td>
-<td width="33%" valign="top">
-
-#### KV-Cache + Progressive Tools
-
-Неизменные части запроса всегда первыми, инструменты «маскируются» вместо удаления, BM25-retrieval подгружает только нужные схемы. **До 10× дешевле** на повторных запросах, **−40% токенов** против полной выгрузки.
-
-</td>
-<td width="33%" valign="top">
-
-#### 6 режимов мульти-агентности
-
-LEADER, AUTO_SELECT, PARALLEL, TOOL_ORCHESTRATED, CLI_NATIVE, BYPASS. Worktree-изоляция параллельных копий, ConflictDetector, общий scratchpad с LLM-консолидацией, ретрай с обратной связью лидера.
-
-</td>
-</tr>
-<tr>
-<td width="33%" valign="top">
-
-#### Structured Failure Classification
-
-7 категорий ошибок (TRANSIENT, CAPABILITY_MISMATCH, TASK_AMBIGUITY, POLICY_DENIAL, RESOURCE_EXHAUSTION, UNVERIFIED_SUCCESS, PERMANENT) — каждая со своей стратегией. **ResultSalvage** извлекает данные даже из неудачных запусков.
-
-</td>
-<td width="33%" valign="top">
-
-#### Approval Gates + Risk Scoring
-
-DefaultShellSafetyPolicy (~25 deny-паттернов), WorkspaceApprovalPolicy per operation class, risk scoring (5 уровней) на каждый tool call, 2FA для деструктивных операций, санитизация секретов до того, как модель их увидит.
-
-</td>
-<td width="33%" valign="top">
-
-#### Collapse + Drift Detection
-
-CollapseDetector по Jaccard-похожести разрушает паттерн через рандомизацию формата результатов (−15..20% частоты зацикливания). DriftDetector ловит семантический уход и возвращает фокус.
-
-</td>
-</tr>
-<tr>
-<td width="33%" valign="top">
-
-#### 3-Layer Compression + Identity Reinjection
-
-micro_compact (плейсхолдеры с anchor protection) → auto_compact (LLM-суммаризация с retry+heuristic fallback) → manual_compact. Аварийный сжим при ContextWindowExceededError с **восстановлением личности агента**.
-
-</td>
-<td width="33%" valign="top">
-
-#### Adaptive Runtime Steering
-
-ExecutionStateInjector показывает агенту остаток бюджета. RuntimeInvariant отслеживает нарушения контрактов в реальном времени. **100+ параметров (RuntimeConstants)** меняются через дашборд без передеплоя.
-
-</td>
-<td width="33%" valign="top">
-
-#### Background Tasks + Forced Finalization
-
-Долгая операция не блокирует цикл — результат доставляется перед следующим решением модели. При исчерпании бюджета — финальный LLM-вызов без инструментов для синтеза лучшего возможного ответа, ResultSalvage не теряет уже собранные данные.
-
-</td>
-</tr>
-</table>
+<picture>
+  <img alt="Protocore — 9 архитектурных решений: tool-result consistency, KV-cache + progressive tools, 6 multi-agent modes, structured failure classification, approval gates + risk scoring, collapse + drift detection, 3-layer compression, adaptive runtime steering, background tasks + forced finalization" src="https://raw.githubusercontent.com/ascorblack-labs/.github/main/profile/assets/differentiators.svg" width="100%">
+</picture>
 
 ---
 
