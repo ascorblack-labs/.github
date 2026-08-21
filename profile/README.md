@@ -10,7 +10,10 @@
 
 <br/>
 
-[![Site](https://img.shields.io/badge/site-protocore.ascorblack.com-10b981?style=for-the-badge&labelColor=0d1117)](https://protocore.ascorblack.com)
+[![Core](https://img.shields.io/badge/core-open%20source-8b5cf6?style=for-the-badge&labelColor=0d1117&logo=github&logoColor=white)](https://github.com/ascorblack-labs/protocore-community)
+[![PyPI](https://img.shields.io/badge/pypi-protocore-3775a9?style=for-the-badge&labelColor=0d1117&logo=pypi&logoColor=white)](https://pypi.org/project/protocore/)
+[![License](https://img.shields.io/badge/license-MPL--2.0-10b981?style=for-the-badge&labelColor=0d1117)](https://github.com/ascorblack-labs/protocore-community/blob/main/LICENSE)
+[![Site](https://img.shields.io/badge/site-protocore.ascorblack.com-06b6d4?style=for-the-badge&labelColor=0d1117)](https://protocore.ascorblack.com)
 [![Research](https://img.shields.io/badge/research-publications-06b6d4?style=for-the-badge&labelColor=0d1117)](https://protocore.ascorblack.com/research/)
 [![Telegram](https://img.shields.io/badge/contact-Telegram-26a5e4?style=for-the-badge&labelColor=0d1117&logo=telegram&logoColor=white)](https://t.me/notsoulmate)
 
@@ -24,7 +27,9 @@ Protocore — разрабатываемая Ascorblack Labs система дл
 
 Система охватывает полный жизненный цикл агентного запуска: сессии и состояние, вызовы инструментов, потоковую доставку событий, подтверждение рискованных действий, восстановление выполнения, фоновые задачи, изолированное исполнение и наблюдаемость. Подключения к моделям и внешним системам реализуются через адаптеры и сервисные контракты.
 
-Исходный код Protocore распространяется на условиях **проприетарных лицензий**. Публичные материалы проекта, архитектурные статьи и исследовательские публикации собраны на [protocore.ascorblack.com](https://protocore.ascorblack.com).
+**Ядро открыто.** Агентный рантайм — цикл выполнения, контракты, поверхность инструментов, компакция контекста и runtime-константы — опубликован под [Mozilla Public License 2.0](https://github.com/ascorblack-labs/protocore-community/blob/main/LICENSE) в репозитории [`protocore-community`](https://github.com/ascorblack-labs/protocore-community). Пакет ставится как `pip install protocore==2.0.0a2`. MPL — копилефт на уровне файла: продукт, собранный поверх ядра, остаётся вашим, а правки самого ядра возвращаются в открытый доступ.
+
+Сервисный слой, интерфейсы и инфраструктура развития продукта остаются закрытыми. Публичные материалы, архитектурные статьи и исследовательские публикации собраны на [protocore.ascorblack.com](https://protocore.ascorblack.com).
 
 ## Архитектура
 
@@ -32,7 +37,7 @@ Protocore — разрабатываемая Ascorblack Labs система дл
 flowchart TB
     UI["Пользовательские интерфейсы<br/>chat · dashboard"]
     API["protocore-enterprise<br/>API · streaming · policies · adapters"]
-    Core["protocore<br/>protocol-first agent runtime"]
+    Core["protocore<br/>protocol-first agent runtime<br/><i>open source · MPL-2.0</i>"]
     Auto["protocore-autonomous<br/>фоновые и периодические задачи"]
     Sandbox["protocore-sandbox<br/>изолированное исполнение"]
     Tools["Dynamic Tools<br/>tools · SDK · MCP service"]
@@ -46,6 +51,8 @@ flowchart TB
     API --> Tools
     API --> Data
     Core --> Models
+
+    style Core fill:#0d1117,stroke:#8b5cf6,stroke-width:2px,color:#e6edf3
 ```
 
 Ключевое ограничение зависимости: чистое ядро не импортирует service-слой или frontend-код. Enterprise-слой связывает runtime с хранилищами и сервисами; интерфейсы общаются с backend по HTTP и потоковым API.
@@ -56,7 +63,8 @@ flowchart TB
 
 | Репозиторий | Стек | Назначение |
 | --- | --- | --- |
-| `protocore` | Python 3.12+ · Pydantic | Чистое ядро оркестрации: цикл выполнения, контракты, состояние сессии, hooks и runtime invariants. |
+| **[`protocore-community`](https://github.com/ascorblack-labs/protocore-community)** 🌐 | Python 3.12+ · Pydantic | **Открытое ядро под MPL-2.0.** Публичное издание `protocore`: тот же рантайм, те же тесты. |
+| `protocore` | Python 3.12+ · Pydantic | Ядро оркестрации в разработке: цикл выполнения, контракты, состояние сессии, hooks и runtime invariants. |
 | `protocore-enterprise` | Python 3.12+ · FastAPI | Service-слой: API, аутентификация и политики, адаптеры данных, streaming и интеграция runtime. |
 | `protocore-autonomous` | Python 3.12+ · FastAPI | Сервис автономных, отложенных и периодических агентных задач. |
 | `protocore-sandbox` | Python 3.12+ · FastAPI | Control plane для изолированных сред выполнения. |
@@ -68,7 +76,7 @@ flowchart TB
 | `protocore-infra` | Docker Compose | Локальная и сервисная инфраструктура данных. |
 | `protocore-platform-gitlab` / `protocore-platform-harbor` | Helm | Самостоятельные platform-компоненты для GitLab и registry. |
 
-Репозитории проекта ведутся приватно. Таблица описывает границы компонентов, а не перечень публичных пакетов.
+Публично опубликовано ядро — [`protocore-community`](https://github.com/ascorblack-labs/protocore-community). Остальные репозитории ведутся приватно; таблица описывает границы компонентов, а не перечень публичных пакетов.
 
 ## Runtime
 
@@ -81,15 +89,17 @@ flowchart TB
 
 ## Проверяемая инженерная база
 
-По состоянию на **16 июля 2026 года**:
+По состоянию на **21 августа 2026 года**:
 
 | Проверка | Результат |
 | --- | ---: |
-| Собранные тесты `protocore` | 2 310 |
-| Собранные тесты `protocore-enterprise` | 5 128 |
-| Branch coverage `protocore` | 91% |
+| Тесты `protocore` | 2 964 |
+| Собранные тесты `protocore-enterprise` | 9 234 |
+| Branch coverage `protocore` | 90% |
+| Гейты ядра на каждый PR | тесты · покрытие · ruff · mypy --strict · bandit |
+| Версии Python | 3.12 · 3.13 · 3.14 |
 
-Это датированный snapshot локальной верификации, а не постоянно обновляемая метрика. Актуальные результаты и методики публикуются вместе с соответствующими материалами проекта.
+Показатели ядра воспроизводимы публично: они и есть то, что гоняет CI в [`protocore-community`](https://github.com/ascorblack-labs/protocore-community/actions). Счётчик тестов enterprise — датированный snapshot локальной верификации, а не постоянно обновляемая метрика.
 
 ## Исследования
 
@@ -117,7 +127,7 @@ flowchart TB
 
 ## Контакты
 
-**Основатель — [Александр Тихонов](https://ascorblack.ru)** ([@ascorblack](https://github.com/ascorblack)), AI Systems Engineer из Санкт-Петербурга.
+**Основатель — [Александр Тихонов](https://ascorblack.ru)** ([@ascorblack](https://github.com/ascorblack)), AI Systems Engineer, Астана.
 
 [![Site](https://img.shields.io/badge/ascorblack.ru-10b981?style=flat-square)](https://ascorblack.ru)
 [![Email](https://img.shields.io/badge/a@scorblack.ru-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:a@scorblack.ru)
@@ -126,5 +136,5 @@ flowchart TB
 ---
 
 <div align="center">
-<sub>© 2026 Ascorblack Labs · Все права защищены</sub>
+<sub>© 2026 Ascorblack Labs · Ядро — <a href="https://github.com/ascorblack-labs/protocore-community/blob/main/LICENSE">MPL-2.0</a> · остальные компоненты — все права защищены</sub>
 </div>
